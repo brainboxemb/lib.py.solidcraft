@@ -302,12 +302,12 @@ def _face_point(base, face):
     depth = pv(base["depth"])
     height = pv(base["thickness"])
     points = {
-        Faces.TOP: [x + widthalf(h), y + depthalf(h), z + height],
-        Faces.BOTTOM: [x + widthalf(h), y + depthalf(h), z],
-        Faces.LEFT: [x, y + depthalf(h), z + half(height)],
-        Faces.RIGHT: [x + width, y + depthalf(h), z + half(height)],
-        Faces.FRONT: [x + widthalf(h), y, z + half(height)],
-        Faces.BACK: [x + widthalf(h), y + depth, z + half(height)],
+        Faces.TOP: [x + half(width), y + half(depth), z + height],
+        Faces.BOTTOM: [x + half(width), y + half(depth), z],
+        Faces.LEFT: [x, y + half(depth), z + half(height)],
+        Faces.RIGHT: [x + width, y + half(depth), z + half(height)],
+        Faces.FRONT: [x + half(width), y, z + half(height)],
+        Faces.BACK: [x + half(width), y + depth, z + half(height)],
     }
     return points[face]
 
@@ -665,7 +665,7 @@ def _explicit_sketch_commands(shape, original, feature, name):
         plane = dict(plane="XY", name=sketch_name)
         if pv(plane_z):
             plane["offset"] = command_value(plane_z)
-        relative_origin = (_combine(x, widthalf(h)), _combine(y, depthalf(h)))
+        relative_origin = (_combine(x, half(width)), _combine(y, half(depth)))
 
     commands = [_command("sketch.create", **plane)]
 
