@@ -921,6 +921,53 @@ class AssemblyTests(unittest.TestCase):
         )
         self.assertEqual(placement["offset"], "height / 2")
 
+    def test_attachment_uses_numeric_seed_not_second_parametric_placement(self):
+        from scpf.assembly import compile_assembly
+        from scpf.core import Anchor, Box, Parameter
+        from scpf.runner import component
+
+        class Panel:
+            def build(self):
+                return Box(40, 12, 20)
+
+        PanelObject = component(Panel)
+        station = Parameter("station", 100.0)
+        parent = PanelObject().move(x=station)
+        child = PanelObject().attach(
+            parent,
+            parent=Anchor.RIGHT,
+            child=Anchor.LEFT,
+        )
+
+        commands = compile_assembly(parent + child, "Pair")
+
+        placements = [
+            command["params"]
+            for command in commands
+            if command["command"] == "joint.create"
+            and command["params"]["name"].startswith("Place ")
+        ]
+        self.assertEqual(len(placements), 1)
+        self.assertEqual(placements[0]["values"][0], "station")
+
+        child_move = next(
+            command["params"]
+            for command in commands
+            if command["command"] == "occurrence.move"
+            and command["params"]["occurrence"] == "Panel:2"
+        )
+        self.assertTrue(
+            all(isinstance(value, (int, float)) for value in child_move["translate"])
+        )
+
+        attachment = next(
+            command["params"]
+            for command in commands
+            if command["command"] == "joint.create"
+            and command["params"]["name"].startswith("Attach Panel:2")
+        )
+        self.assertEqual(attachment["type"], "rigid")
+
     def test_parent_parameter_binding_reuses_existing_name_without_child_duplicate(self):
         from scpf.assembly import compile_assembly
         from scpf.core import Box, Edges, Parameter

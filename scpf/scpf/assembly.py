@@ -243,8 +243,9 @@ def compile_assembly(value, name):
         first_is_root = (
             instances[0] is assembly.instances[0] and parent_name is None
         )
-        first_has_symbolic_move = bool(
-            parameters_in(*instances[0].translation)
+        first_has_symbolic_move = (
+            instances[0].attachment is None
+            and bool(parameters_in(*instances[0].translation))
         )
         create_params = {
             "name": component_name,
@@ -317,13 +318,11 @@ def compile_assembly(value, name):
         # the placement joint changes position without undoing that rotation.
         for instance, native_name in occurrences:
             symbolic_move = bool(parameters_in(*instance.translation))
+            symbolic_placement = (
+                symbolic_move and instance.attachment is None
+            )
             if instance.rotation is None and not any(instance.translation):
                 continue
-            if symbolic_move and instance.attachment is not None:
-                raise ModelError(
-                    "symbolic move() on an attached occurrence is not "
-                    "supported by the SolidCraft 0.30.1 compatibility lowering"
-                )
 
             for parameter in parameters_in(*instance.translation):
                 if not any(
@@ -337,12 +336,12 @@ def compile_assembly(value, name):
                         expression=f"{parameter.value:g} mm",
                     ))
 
-            if instance.rotation is not None or not symbolic_move:
+            if instance.rotation is not None or not symbolic_placement:
                 params = {
                     "occurrence": native_name,
                     "translate": (
                         [0.0, 0.0, 0.0]
-                        if symbolic_move
+                        if symbolic_placement
                         else [pv(value) for value in instance.translation]
                     ),
                 }
@@ -352,12 +351,12 @@ def compile_assembly(value, name):
                 if (
                     instance is assembly.instances[0]
                     and parent_name is None
-                    and not symbolic_move
+                    and not symbolic_placement
                 ):
                     params["move_grounded"] = True
                 commands.append(_command("occurrence.move", **params))
 
-            if symbolic_move:
+            if symbolic_placement:
                 x, y, z = instance.translation
                 parent_origin = {"plane": "XY"}
                 if parent_name is not None:
