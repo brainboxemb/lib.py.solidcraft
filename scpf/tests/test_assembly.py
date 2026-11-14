@@ -138,12 +138,17 @@ class AssemblyTests(unittest.TestCase):
         from scpf.assembly import compile_assembly
 
         @component
-        class Part:
+        class LeftPart:
             def build(self):
                 return Box(10, 10, 10)
 
-        left = Part().group("LeftGroup")
-        right = Part().copy().group("RightGroup")
+        @component
+        class RightPart:
+            def build(self):
+                return Box(12, 10, 10)
+
+        left = LeftPart().group("LeftGroup")
+        right = RightPart().group("RightGroup")
         commands = compile_assembly(left + right, "Grouped")["commands"]
 
         groups = [
