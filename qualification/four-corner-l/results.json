@@ -33,7 +33,7 @@
       "FrameBlock"
     ],
     "feature": 3,
-    "ms": 0.89302,
+    "ms": 0.764486,
     "name": "Box1",
     "removed_bodies": [],
     "warning": null
@@ -47,7 +47,7 @@
     ],
     "created_bodies": [],
     "feature": 4,
-    "ms": 55.403904,
+    "ms": 37.394037999999995,
     "name": "Fillet1",
     "removed_bodies": [],
     "warning": null
@@ -127,7 +127,7 @@
       "LProfile"
     ],
     "feature": 8,
-    "ms": 0.3103,
+    "ms": 0.325971,
     "name": "Extrude1",
     "removed_bodies": [],
     "warning": null

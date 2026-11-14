@@ -21,7 +21,7 @@
       "Panel"
     ],
     "feature": 3,
-    "ms": 0.873193,
+    "ms": 0.714921,
     "name": "Box1",
     "removed_bodies": [],
     "warning": null
@@ -52,7 +52,7 @@
       "Panel_2"
     ],
     "feature": 6,
-    "ms": 0.21568400000000001,
+    "ms": 0.140202,
     "name": "Box2",
     "removed_bodies": [],
     "warning": null
@@ -114,7 +114,7 @@
       "Panel_3"
     ],
     "feature": 9,
-    "ms": 0.210213,
+    "ms": 0.178675,
     "name": "Box3",
     "removed_bodies": [],
     "warning": null
@@ -205,7 +205,7 @@
       "Panel_4"
     ],
     "feature": 13,
-    "ms": 0.209842,
+    "ms": 0.17749199999999998,
     "name": "Box4",
     "removed_bodies": [],
     "warning": null

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "case": "parametric-anchor",
   "title": "Face anchor follows parent geometry",
-  "source_commit": "e57f2dc3211cdca893b4608a2109fa24cf3aec84",
+  "source_commit": "751f19e5f5be9de225a67d8bc6c26964bf92ebcf",
   "solidcraft_version": "0.30.1",
   "status": "pass",
   "levels": {
