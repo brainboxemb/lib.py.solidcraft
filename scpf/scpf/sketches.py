@@ -4,7 +4,7 @@ Each supported base shape returns its command list plus simple shape metadata.
 Feature operations (Hole, Fillet, join, cut) are handled separately.
 """
 from math import isfinite
-from .core import Shape, command_value, pv
+from .core import Shape, command_value, half, pv
 from .placement import _base_rectangle
 
 
@@ -26,7 +26,7 @@ def compile_base(shape, name):
     if shape.kind in ("box", "placed_box"):
         if shape.kind == "box":
             length, width, height = shape.data
-            origin = (-length / 2, -width / 2, 0)
+            origin = (-half(length), -half(width), 0)
             command_corner = (
                 _half(length, True),
                 _half(width, True),
@@ -175,7 +175,7 @@ def compile_base(shape, name):
         return steps, {
             "profile": "rectangle", "width": width, "depth": height,
             "thickness": depth,
-            "origin": (-pv(width) / 2, -pv(height) / 2, 0),
+            "origin": (-half(pv(width)), -half(pv(height)), 0),
         }
 
     raise ModelError(f"Expected a Box or explicit Sketch extrusion, got {shape.kind}")

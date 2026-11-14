@@ -510,7 +510,7 @@ def _box_corner_from_anchor(length, width, height, point, anchor):
         elif side > 0:
             corner.append(_dim_add(coordinate, -dimension))
         else:
-            corner.append(_dim_add(coordinate, -(dimension / 2)))
+            corner.append(_dim_add(coordinate, -half(dimension)))
     return tuple(corner)
 
 
@@ -529,11 +529,11 @@ def _shape_center(shape):
 
     if shape.kind == "cylinder":
         height, _diameter, axis = shape.data
-        half = height / 2
+        half_height = half(height)
         return {
-            "X": (half, 0, 0),
-            "Y": (0, half, 0),
-            "Z": (0, 0, half),
+            "X": (half_height, 0, 0),
+            "Y": (0, half_height, 0),
+            "Z": (0, 0, half_height),
         }[axis]
 
     if shape.kind == "translated":

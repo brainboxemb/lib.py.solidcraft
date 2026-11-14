@@ -7,6 +7,7 @@ from .core import (
     Shape,
     _BoundOffset,
     _box_corner_from_anchor,
+    half,
     pv,
     command_value,
 )
@@ -28,7 +29,7 @@ def _base_rectangle(shape):
     if shape.kind == "box":
         length, width, height = shape.data
         # Box uses the SolidCraft convention: centered in XY, bottom at Z=0.
-        return (length, width), (-length / 2, -width / 2, 0), height
+        return (length, width), (-half(length), -half(width), 0), height
     if shape.kind == "placed_box":
         box, x, y, z, anchor = shape.data
         if box.kind != "box":
@@ -105,11 +106,11 @@ def _bound_offset(value, size, axis):
     if value.axis != axis:
         raise ValueError(f"{axis} offset cannot use {value.axis} bounds")
     if value.reference == "min":
-        return _combine(-(size / 2), value.delta)
+        return _combine(-(half(size)), value.delta)
     if value.reference == "center":
         return value.delta
     if value.reference == "max":
-        return _combine(size / 2, value.delta)
+        return _combine(half(size), value.delta)
     raise ValueError(f"unknown bound reference {value.reference!r}")
 
 
@@ -168,10 +169,10 @@ def _anchored_features(shape):
             raise ValueError("Anchor.INNER_BOTTOM requires a shelled body")
         face_z = _combine(z, wall)
     else:
-        face_z = _combine(z, thickness / 2)
+        face_z = _combine(z, half(thickness))
     if child.kind == "linear_pattern":
         feature, count, spacing, axis = child.data
-        shifts = [((n - (count - 1) / 2) * spacing, axis)
+        shifts = [((n - half(count - 1)) * spacing, axis)
                   for n in range(count)]
     else:
         feature, shifts = child, [(0, None)]
@@ -197,7 +198,7 @@ def _anchored_features(shape):
         if child_anchor is Anchor.BOTTOM:
             base_z = face_z
         elif child_anchor is Anchor.CENTER:
-            base_z = _combine(face_z, -(height / 2))
+            base_z = _combine(face_z, -(half(height)))
         else:
             base_z = _combine(face_z, -height)
     else:
@@ -208,16 +209,16 @@ def _anchored_features(shape):
     for shift, axis in shifts:
         dx, dy = ((shift, 0) if axis is Axis.X else
                   ((0, shift) if axis is Axis.Y else (0, 0)))
-        xx = _combine(x, width / 2, offset_x, dx)
-        yy = _combine(y, depth / 2, offset_y, dy)
+        xx = _combine(x, half(width), offset_x, dx)
+        yy = _combine(y, half(depth), offset_y, dy)
         # The edge samples are intentionally strictly within straight segments
         # on filleted rectangular faces (midpoints, not rounded corners).
         if not on_boss and parent_anchor in (Anchor.TOP, Anchor.BOTTOM) and child_anchor is Anchor.BOTTOM:
             refs = [
-                {"edge": [pv(x), pv(y) + pv(depth)/2, pv(face_z)],
-                 "distance": command_value(_combine(width / 2, offset_x, dx))},
-                {"edge": [pv(x) + pv(width)/2, pv(y), pv(face_z)],
-                 "distance": command_value(_combine(depth / 2, offset_y, dy))}
+                {"edge": [pv(x), pv(y) + half(pv(depth)), pv(face_z)],
+                 "distance": command_value(_combine(half(width), offset_x, dx))},
+                {"edge": [pv(x) + half(pv(width)), pv(y), pv(face_z)],
+                 "distance": command_value(_combine(half(depth), offset_y, dy))}
             ]
         else:
             refs = None

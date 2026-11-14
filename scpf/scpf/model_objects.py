@@ -16,6 +16,8 @@ from .core import (
     _DirectionSelector,
     _dim_add,
     _selector_anchor,
+    half,
+    midpoint,
     parameters_in,
     pv,
 )
@@ -160,7 +162,7 @@ def _xz_polygon_rectangle_bounds(shape):
     elif direction == "negative":
         ymin, ymax = plane_y - depth, plane_y
     elif direction == "symmetric":
-        ymin, ymax = plane_y - depth / 2, plane_y + depth / 2
+        ymin, ymax = plane_y - half(depth), plane_y + half(depth)
     else:
         raise ValueError("unsupported extrusion direction")
 
@@ -207,9 +209,9 @@ def _anchor_point(instance, anchor):
     """Local point represented by one reusable-component anchor."""
     bounds = _rectangular_bounds(instance)
     (xmin, xmax), (ymin, ymax), (zmin, zmax) = bounds
-    xmid = (xmin + xmax) / 2
-    ymid = (ymin + ymax) / 2
-    zmid = (zmin + zmax) / 2
+    xmid = midpoint(xmin, xmax)
+    ymid = midpoint(ymin, ymax)
+    zmid = midpoint(zmin, zmax)
     points = {
         Anchor.CENTER: (xmid, ymid, zmid),
         Anchor.LEFT: (xmin, ymid, zmid),
@@ -243,8 +245,8 @@ def _corner_origin_points(instance, anchor):
     if anchor not in _CORNER_ANCHORS:
         raise ValueError("corner origin requires a corner Anchor")
     (xmin, xmax), (ymin, ymax), (zmin, zmax) = _rectangular_bounds(instance)
-    xmid = (xmin + xmax) / 2
-    zmid = (zmin + zmax) / 2
+    xmid = midpoint(xmin, xmax)
+    zmid = midpoint(zmin, zmax)
 
     front = anchor.value.startswith("front_")
     left = anchor.value.endswith("_left")

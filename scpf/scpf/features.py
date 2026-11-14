@@ -15,6 +15,8 @@ from .core import (
     _DirectionSelector,
     _ProfileEdgeSelection,
     _dim_add,
+    half,
+    midpoint,
     pv,
     command_value,
 )
@@ -178,8 +180,8 @@ def _resolve_profile_edges(base, selection):
     thickness = pv(base["thickness"])
     direction = base["extrusion_direction"]
     if direction == "symmetric":
-        start_y = plane_y - thickness / 2
-        end_y = plane_y + thickness / 2
+        start_y = plane_y - half(thickness)
+        end_y = plane_y + half(thickness)
     elif direction == "positive":
         start_y = plane_y
         end_y = plane_y + thickness
@@ -188,7 +190,7 @@ def _resolve_profile_edges(base, selection):
         end_y = plane_y - thickness
 
     if selection.kind == "vertices":
-        sweep_mid_y = (start_y + end_y) / 2
+        sweep_mid_y = midpoint(start_y, end_y)
         return [
             (pv(points[i][0]), sweep_mid_y, -pv(points[i][1]))
             for i in matches
@@ -201,9 +203,9 @@ def _resolve_profile_edges(base, selection):
         for i in matches:
             a, b = points[i], points[(i + 1) % len(points)]
             picks.append((
-                (pv(a[0]) + pv(b[0])) / 2,
+                midpoint(pv(a[0]), pv(b[0])),
                 y,
-                -(pv(a[1]) + pv(b[1])) / 2,
+                -midpoint(pv(a[1]), pv(b[1])),
             ))
     return picks
 
@@ -248,7 +250,7 @@ def _resolve_direction_edges(base, selection):
             elif side > 0:
                 point.append(_dim_add(minimum, dimension))
             else:
-                point.append(_dim_add(minimum, dimension / 2))
+                point.append(_dim_add(minimum, half(dimension)))
         picks.append(tuple(point))
     return picks
 
@@ -264,7 +266,7 @@ def _fillet_command(base, radius, edges, name):
         x, y, z = (pv(v) for v in base["origin"])
         if z != 0:
             raise ModelError("vertical fillet of shifted base not supported")
-        picks = [[x + dx, y + dy, h / 2]
+        picks = [[x + dx, y + dy, half(h)]
                  for dx, dy in ((0, 0), (w, 0), (w, d), (0, d))]
         return _command(
             "solid.fillet",
@@ -300,12 +302,12 @@ def _face_point(base, face):
     depth = pv(base["depth"])
     height = pv(base["thickness"])
     points = {
-        Faces.TOP: [x + width / 2, y + depth / 2, z + height],
-        Faces.BOTTOM: [x + width / 2, y + depth / 2, z],
-        Faces.LEFT: [x, y + depth / 2, z + height / 2],
-        Faces.RIGHT: [x + width, y + depth / 2, z + height / 2],
-        Faces.FRONT: [x + width / 2, y, z + height / 2],
-        Faces.BACK: [x + width / 2, y + depth, z + height / 2],
+        Faces.TOP: [x + widthalf(h), y + depthalf(h), z + height],
+        Faces.BOTTOM: [x + widthalf(h), y + depthalf(h), z],
+        Faces.LEFT: [x, y + depthalf(h), z + half(height)],
+        Faces.RIGHT: [x + width, y + depthalf(h), z + half(height)],
+        Faces.FRONT: [x + widthalf(h), y, z + half(height)],
+        Faces.BACK: [x + widthalf(h), y + depth, z + half(height)],
     }
     return points[face]
 
@@ -656,14 +658,14 @@ def _explicit_sketch_commands(shape, original, feature, name):
                 raise ModelError("Anchor.INNER_BOTTOM requires a shelled body")
             plane_z = _combine(z, wall)
         elif parent_anchor is Anchor.CENTER:
-            plane_z = _combine(z, thickness / 2)
+            plane_z = _combine(z, half(thickness))
         else:
             raise ModelError("unsupported explicit Sketch anchor")
 
         plane = dict(plane="XY", name=sketch_name)
         if pv(plane_z):
             plane["offset"] = command_value(plane_z)
-        relative_origin = (_combine(x, width / 2), _combine(y, depth / 2))
+        relative_origin = (_combine(x, widthalf(h)), _combine(y, depthalf(h)))
 
     commands = [_command("sketch.create", **plane)]
 
