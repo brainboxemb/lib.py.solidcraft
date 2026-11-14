@@ -37,6 +37,8 @@ EXPORT_COVERAGE = {
     "RIGHT": ("Q2", "Q2", [], "Cardinal direction constant; combination semantics are covered by API regressions."),
     "FRONT": ("Q2", "Q2", [], "Cardinal direction constant; combination semantics are covered by API regressions."),
     "BACK": ("Q2", "Q2", [], "Cardinal direction constant; combination semantics are covered by API regressions."),
+    "half": ("Q1", "Q1", [], "Numeric/symbolic geometry helper; Python-level arithmetic qualification is appropriate."),
+    "midpoint": ("Q1", "Q1", [], "Numeric/symbolic geometry helper; Python-level arithmetic qualification is appropriate."),
     "pv": ("Q1", "Q1", [], "Build-time numeric extraction/validation helper; native coverage is not appropriate."),
     "History": ("Q3", "Q4", ["history-policy"], "Native SolidCraft timeline proves AUTO/native BossFeature history differs from forced SKETCH lowering."),
     "behavior": ("Q3", "Q4", ["history-policy"], "behavior(history=History.SKETCH) is verified through persisted native Sketch/ExtrudeFeature timeline entries."),
