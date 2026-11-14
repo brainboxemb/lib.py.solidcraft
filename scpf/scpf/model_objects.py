@@ -359,9 +359,10 @@ class ModelInstance:
     def move(self, x=0, y=0, z=0):
         """Translate this occurrence without changing shared component geometry.
 
-        Keep Parameter/Expression values symbolic. SolidCraft occurrence.move
-        accepts native length expressions, so parameter-driven placement stays
-        associative instead of being flattened to the current Python value.
+        Keep Parameter/Expression values symbolic so parameter-driven
+        placement stays associative instead of being flattened to the current
+        Python value. The compiler lowers that intent to the native placement
+        mechanism supported by the targeted SolidCraft version.
         """
         values = (x, y, z)
         concrete = tuple(pv(value) for value in values)
