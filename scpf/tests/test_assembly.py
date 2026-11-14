@@ -939,7 +939,7 @@ class AssemblyTests(unittest.TestCase):
             child=Anchor.LEFT,
         )
 
-        commands = compile_assembly(parent + child, "Pair")
+        commands = compile_assembly(parent + child, "Pair")["commands"]
 
         placements = [
             command["params"]
