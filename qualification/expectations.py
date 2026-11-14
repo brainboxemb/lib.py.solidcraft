@@ -117,7 +117,9 @@ EXPECTED_BOUNDS = {
         {"label": "RoundedRectangleSketch", "min": [-40, -30, 0], "max": [40, 30, 13]},
     ],
     "primitive-csg": [
-        {"label": "PrimitiveCsg", "min": [-20, -20, 0], "max": [25, 20, 20]},
+        # The X-axis Ø8 bore removes the sphere's exact X=-20 extremum.
+        # Remaining sphere/bore intersection: -sqrt(20^2 - 4^2).
+        {"label": "PrimitiveCsg", "min": [-19.595917942265423, -20, 0], "max": [25, 20, 20]},
     ],
     "bracket": [
         {"label": "Bracket", "min": [0, -12, -40], "max": [40, 12, 0]},

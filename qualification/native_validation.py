@@ -789,8 +789,14 @@ def validate_primitive_csg(root: Path) -> Validation:
     faces = b.get("face_types", {})
     v.check("sphere survives CSG", faces.get("sphere") == 1, 1, faces.get("sphere"))
     v.check("cylindrical bore survives CSG", faces.get("cylinder") == 1, 1, faces.get("cylinder"))
-    v.check("clipped bounds", bbox_close(b, [-20, -20, 0], [25, 20, 20], 0.01),
-            {"min": [-20, -20, 0], "max": [25, 20, 20]}, b["bbox"])
+    expected_min = [-19.595917942265423, -20, 0]
+    expected_max = [25, 20, 20]
+    v.check(
+        "clipped bounds",
+        bbox_close(b, expected_min, expected_max, 0.01),
+        {"min": expected_min, "max": expected_max},
+        b["bbox"],
+    )
     return v
 
 
