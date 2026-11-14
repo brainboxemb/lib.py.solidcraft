@@ -22,7 +22,7 @@
       "Panel"
     ],
     "feature": 5,
-    "ms": 0.9335450000000001,
+    "ms": 0.705452,
     "name": "Box1",
     "removed_bodies": [],
     "warning": null
@@ -81,7 +81,7 @@
       "Frame"
     ],
     "feature": 9,
-    "ms": 0.192631,
+    "ms": 0.128964,
     "name": "Box2",
     "removed_bodies": [],
     "warning": null

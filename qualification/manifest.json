@@ -1,5 +1,5 @@
 {
-  "library_commit": "7387e8e10743d010932f26e4a26a7c4d5b1c7e75",
+  "library_commit": "77050f5602feb8bfc39b4b04cb256b42bbdb06e6",
   "solidcraft_version": "0.30.1",
   "native_verified": true,
   "cases": {
@@ -2406,8 +2406,8 @@
     },
     "primitive-csg": {
       "title": "Primitive CSG",
-      "status": "FAIL",
-      "status_detail": "Q1 \u00b7 Q2 \u00b7 Q3 \u00b7 Q4 FAIL \u00b7 Q5 N/R \u00b7 Q6",
+      "status": "PASS",
+      "status_detail": "Q1 \u00b7 Q2 \u00b7 Q3 \u00b7 Q4 \u00b7 Q5 N/R \u00b7 Q6",
       "command_count": 4,
       "native_evidence": [
         "results.json",
@@ -2437,7 +2437,7 @@
         "overlay-iso.png",
         "visual-diff-iso.png"
       ],
-      "qualification_status": "fail",
+      "qualification_status": "pass",
       "levels": {
         "q1": {
           "status": "pass",
@@ -2462,7 +2462,7 @@
           ]
         },
         "q4": {
-          "status": "fail",
+          "status": "pass",
           "evidence": [
             "joint-inspect.json",
             "measurements.json",

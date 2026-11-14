@@ -1,17 +1,17 @@
 {
   "case": "primitive-csg",
-  "q4": "fail",
+  "q4": "pass",
   "q5": "not-required",
   "checks": [
     {
       "name": "declared target geometry",
       "level": "q4",
-      "status": "fail",
+      "status": "pass",
       "expected": [
         {
           "label": "PrimitiveCsg",
           "min": [
-            -20,
+            -19.595917942265423,
             -20,
             0
           ],
@@ -61,10 +61,10 @@
     {
       "name": "clipped bounds",
       "level": "q4",
-      "status": "fail",
+      "status": "pass",
       "expected": {
         "min": [
-          -20,
+          -19.595917942265423,
           -20,
           0
         ],

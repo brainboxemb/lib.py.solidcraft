@@ -40,14 +40,14 @@
     depth = 12.0
 
     def build(self):
-        half = self.width / 2
+        half_width = half(self.width)
         with Sketch(name=&quot;Profile&quot;, plane=&quot;XZ&quot;) as sketch:
             Polygon2D(
                 [
-                    (&quot;lower_left&quot;, (-half, 0)),
-                    (&quot;lower_right&quot;, (half, 0)),
-                    (&quot;upper_right&quot;, (half, self.height)),
-                    (&quot;upper_left&quot;, (-half, self.height)),
+                    (&quot;lower_left&quot;, (-half_width, 0)),
+                    (&quot;lower_right&quot;, (half_width, 0)),
+                    (&quot;upper_right&quot;, (half_width, self.height)),
+                    (&quot;upper_left&quot;, (-half_width, self.height)),
                 ],
                 plane=&quot;XZ&quot;,
                 world=True,

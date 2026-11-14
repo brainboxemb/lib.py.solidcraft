@@ -100,11 +100,11 @@ class FourCornerL:
             x=Anchor.RIGHT,
         )
 
-        half_width = self.frame_width / 2
-        half_depth = self.frame_depth / 2
-        centre_height = (
+        half_width = half(self.frame_width)
+        half_depth = half(self.frame_depth)
+        centre_height = half(
             self.frame_height - LProfile.PROFILE_HEIGHT
-        ) / 2
+        )
 
         front_left = profile.copy().attach(
             frame,

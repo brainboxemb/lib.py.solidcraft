@@ -130,8 +130,8 @@
       "command": "sketch.circle.center",
       "params": {
         "center": [
-          "((-(size)) / 2) + (size / 2)",
-          "((-(size)) / 2) + (size / 2) + (-15 mm)"
+          "(-(size / 2)) + (size / 2)",
+          "(-(size / 2)) + (size / 2) + (-15 mm)"
         ],
         "diameter": 10.0
       }

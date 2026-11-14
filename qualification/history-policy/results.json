@@ -14,7 +14,7 @@
       "HistoryPolicyBoss"
     ],
     "feature": 1,
-    "ms": 0.767545,
+    "ms": 0.732082,
     "name": "Box1",
     "removed_bodies": [],
     "warning": null
@@ -28,7 +28,7 @@
     ],
     "created_bodies": [],
     "feature": 2,
-    "ms": 58.510675,
+    "ms": 54.642726,
     "name": "Boss1",
     "removed_bodies": [],
     "warning": null
@@ -42,7 +42,7 @@
     ],
     "created_bodies": [],
     "feature": 3,
-    "ms": 35.862683,
+    "ms": 32.964055,
     "name": "Boss2",
     "removed_bodies": [],
     "warning": null
@@ -92,7 +92,7 @@
     ],
     "created_bodies": [],
     "feature": 5,
-    "ms": 40.528477,
+    "ms": 38.361367,
     "name": "Boss",
     "removed_bodies": [],
     "warning": null
@@ -142,7 +142,7 @@
     ],
     "created_bodies": [],
     "feature": 7,
-    "ms": 27.400295,
+    "ms": 25.940524999999997,
     "name": "Boss hole",
     "removed_bodies": [],
     "warning": null
@@ -192,7 +192,7 @@
     ],
     "created_bodies": [],
     "feature": 9,
-    "ms": 97.77757199999999,
+    "ms": 89.266408,
     "name": "Explicit pad",
     "removed_bodies": [],
     "warning": null

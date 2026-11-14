@@ -62,8 +62,8 @@ class EightCornerBrackets:
             x=Anchor.RIGHT,
         )
 
-        half_width = self.frame_width / 2
-        half_depth = self.frame_depth / 2
+        half_width = half(self.frame_width)
+        half_depth = half(self.frame_depth)
         top_height = self.frame_height - LProfile.PROFILE_HEIGHT
 
         def placed(x, y, angle, height):

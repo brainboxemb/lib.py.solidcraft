@@ -82,12 +82,12 @@
       "command": "sketch.rectangle.rounded",
       "params": {
         "p0": [
-          "((-(base_width)) / 2) + (base_width / 2) + (-20 mm)",
-          "((-(base_depth)) / 2) + (base_depth / 2) + (-15 mm)"
+          "(-(base_width / 2)) + (base_width / 2) + (-20 mm)",
+          "(-(base_depth / 2)) + (base_depth / 2) + (-15 mm)"
         ],
         "p1": [
-          "((-(base_width)) / 2) + (base_width / 2) + (-20 mm) + (pad_width)",
-          "((-(base_depth)) / 2) + (base_depth / 2) + (-15 mm) + (pad_depth)"
+          "(-(base_width / 2)) + (base_width / 2) + (-20 mm) + (pad_width)",
+          "(-(base_depth / 2)) + (base_depth / 2) + (-15 mm) + (pad_depth)"
         ],
         "radius": "radius"
       }

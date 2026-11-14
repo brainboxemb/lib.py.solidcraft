@@ -66,19 +66,19 @@ class FlightcaseCorner:
         # The case interior is local +X/+Y/+Z; the three plates sit outside
         # the bottom, front and left faces and overlap slightly inside the cap.
         bottom = Box(arm, arm, t).move(
-            x=arm / 2,
-            y=arm / 2,
-            z=-t / 2,
+            x=half(arm),
+            y=half(arm),
+            z=-half(t),
         )
         front = Box(arm, t + overlap, arm + overlap).move(
-            x=arm / 2,
-            y=(overlap - t) / 2,
-            z=(arm - overlap) / 2,
+            x=half(arm),
+            y=half(overlap - t),
+            z=half(arm - overlap),
         )
         side = Box(t + overlap, arm, arm + overlap).move(
-            x=(overlap - t) / 2,
-            y=arm / 2,
-            z=(arm - overlap) / 2,
+            x=half(overlap - t),
+            y=half(arm),
+            z=half(arm - overlap),
         )
         return bottom + front + side
 
@@ -116,8 +116,8 @@ class EightFlightcaseCorners:
         top_rear_right = AnchorFrame(z=Anchor.UP, x=Anchor.FRONT)
         top_rear_left = AnchorFrame(z=Anchor.UP, x=Anchor.RIGHT)
 
-        half_width = self.case_width / 2
-        half_depth = self.case_depth / 2
+        half_width = half(self.case_width)
+        half_depth = half(self.case_depth)
 
         def placed(x, y, z, child_frame):
             return protector.copy().attach(
