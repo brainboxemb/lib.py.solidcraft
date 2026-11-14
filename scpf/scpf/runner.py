@@ -564,6 +564,8 @@ def run_script(path: str | Path) -> dict:
         "AnchorTopology": core.AnchorTopology,
         "Axis": core.Axis,
         "Shape": core.Shape,
+        "half": core.half,
+        "midpoint": core.midpoint,
         "pv": core.pv,
         "X": core.X,
         "Y": core.Y,

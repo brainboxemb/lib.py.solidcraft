@@ -138,6 +138,26 @@ class SCPFExamples(unittest.TestCase):
         )
         self.assertEqual(midpoint(10, 20), 15)
 
+    def test_half_helpers_are_available_in_implicit_model_context(self):
+        with tempfile.TemporaryDirectory() as directory:
+            file = Path(directory) / "model.py"
+            file.write_text(
+                "class HalfBox:\n"
+                "    width = 80.0\n"
+                "    def build(self):\n"
+                "        center = midpoint(0, self.width)\n"
+                "        return Box(half(self.width), 10, 5).move(x=center)\n"
+                "HalfBox()\n",
+                encoding="utf-8",
+            )
+            generated = run_script(file)
+
+        box = next(
+            row["params"] for row in generated["commands"]
+            if row["command"] == "solid.box"
+        )
+        self.assertEqual(box["length"], "width / 2")
+
     def test_removed_aliases_are_not_exposed(self):
         import scpf
         for name in ("Rectangle", "Circle", "Polygon", "Cube", "Box3D", "Cylinder3D", "Sphere3D"):
