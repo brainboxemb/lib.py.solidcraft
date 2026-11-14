@@ -437,6 +437,16 @@ class Expression:
         return Expression(-self.value, f"-({self.expression})", self.parameters)
 
 
+def half(value):
+    """Return half of a numeric or symbolic CAD dimension."""
+    return value / 2
+
+
+def midpoint(start, end):
+    """Return the point halfway between two numeric or symbolic dimensions."""
+    return (start + end) / 2
+
+
 def pv(dim) -> float:
     """Return the concrete Python value of a symbolic CAD dimension.
 

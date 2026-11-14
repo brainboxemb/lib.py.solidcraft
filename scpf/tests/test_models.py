@@ -122,6 +122,22 @@ class SCPFExamples(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "same axis"):
             _ = LEFT + RIGHT
 
+    def test_half_and_midpoint_preserve_symbolic_dimensions(self):
+        from scpf import half, midpoint
+        from scpf.core import Parameter, command_value
+
+        width = Parameter("width", 100)
+        left = Parameter("left", 20)
+        right = Parameter("right", 80)
+
+        self.assertEqual(half(10), 5)
+        self.assertEqual(command_value(half(width)), "width / 2")
+        self.assertEqual(
+            command_value(midpoint(left, right)),
+            "(left + (right)) / 2",
+        )
+        self.assertEqual(midpoint(10, 20), 15)
+
     def test_removed_aliases_are_not_exposed(self):
         import scpf
         for name in ("Rectangle", "Circle", "Polygon", "Cube", "Box3D", "Cylinder3D", "Sphere3D"):
