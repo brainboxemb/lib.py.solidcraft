@@ -2,7 +2,7 @@
   "schema_version": 1,
   "case": "parent-derived-child-size",
   "title": "Child dimensions derived from parent parameters",
-  "source_commit": "751f19e5f5be9de225a67d8bc6c26964bf92ebcf",
+  "source_commit": "794210b663fe50b1fcc899b4a01a46f1eac657d0",
   "solidcraft_version": "0.30.1",
   "status": "pass",
   "levels": {
