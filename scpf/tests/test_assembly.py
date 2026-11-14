@@ -801,7 +801,7 @@ class AssemblyTests(unittest.TestCase):
         )
 
 
-    def test_occurrence_move_preserves_parameter_expression(self):
+    def test_symbolic_move_lowers_to_parametric_placement_joint(self):
         import warnings
 
         with tempfile.TemporaryDirectory() as directory:
@@ -814,7 +814,7 @@ class AssemblyTests(unittest.TestCase):
                 "class Display:\n"
                 "    depth = 12.0\n"
                 "    def build(self):\n"
-                "        return Panel(depth=self.depth).move(y=self.depth / 2)\n"
+                "        return Panel(depth=self.depth).move(y=half(self.depth))\n"
                 "Display()\n",
                 encoding="utf-8",
             )
@@ -826,12 +826,21 @@ class AssemblyTests(unittest.TestCase):
             item for item in caught
             if "parameter 'depth'" in str(item.message)
         ])
-        move = next(
+        self.assertFalse(any(
+            command["command"] == "occurrence.move"
+            for command in document["commands"]
+        ))
+        placement = next(
             command["params"]
             for command in document["commands"]
-            if command["command"] == "occurrence.move"
+            if command["command"] == "joint.create"
+            and command["params"]["name"] == "Place Panel:1"
         )
-        self.assertEqual(move["translate"], [0, "depth / 2", 0])
+        self.assertEqual(placement["type"], "planar")
+        self.assertEqual(placement["a"], {"plane": "XY"})
+        self.assertEqual(placement["values"], [0, "depth / 2", 0.0])
+        self.assertEqual(placement["offset"], 0)
+        self.assertTrue(placement["flip"])
         names = [
             command["params"]["name"]
             for command in document["commands"]
@@ -839,7 +848,7 @@ class AssemblyTests(unittest.TestCase):
         ]
         self.assertEqual(names, ["depth"])
 
-    def test_occurrence_move_adds_placement_only_parameter(self):
+    def test_symbolic_move_adds_placement_only_parameter(self):
         import warnings
 
         with tempfile.TemporaryDirectory() as directory:
@@ -870,12 +879,47 @@ class AssemblyTests(unittest.TestCase):
             and command["params"]["name"] == "offset"
         )
         self.assertEqual(parameter["expression"], "30 mm")
+        placement = next(
+            command["params"]
+            for command in document["commands"]
+            if command["command"] == "joint.create"
+            and command["params"]["name"] == "Place Panel:1"
+        )
+        self.assertEqual(placement["values"], ["offset", 0, 0.0])
+        self.assertEqual(placement["offset"], 0)
+
+    def test_symbolic_move_with_rotation_rotates_first_then_places(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "rotated_parametric_move.py"
+            path.write_text(
+                "class Strip:\n"
+                "    def build(self):\n"
+                "        return Box(40, 12, 4)\n"
+                "class Frame:\n"
+                "    height = 100.0\n"
+                "    def build(self):\n"
+                "        return Strip().rotate(Y, 90).move(z=half(self.height))\n"
+                "Frame()\n",
+                encoding="utf-8",
+            )
+            document = run_script(path)
+
         move = next(
             command["params"]
             for command in document["commands"]
             if command["command"] == "occurrence.move"
         )
-        self.assertEqual(move["translate"], ["offset", 0, 0])
+        self.assertEqual(move["translate"], [0.0, 0.0, 0.0])
+        self.assertEqual(move["axis"], [0.0, 1.0, 0.0])
+        self.assertEqual(move["angle"], "90 deg")
+
+        placement = next(
+            command["params"]
+            for command in document["commands"]
+            if command["command"] == "joint.create"
+            and command["params"]["name"] == "Place Strip:1"
+        )
+        self.assertEqual(placement["offset"], "height / 2")
 
     def test_parent_parameter_binding_reuses_existing_name_without_child_duplicate(self):
         from scpf.assembly import compile_assembly

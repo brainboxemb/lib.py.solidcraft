@@ -34,6 +34,23 @@ def _command(command_name, **params):
     }
 
 
+def _concrete_joint_reference(reference):
+    """Evaluate topology pick coordinates at authoring time.
+
+    SolidCraft 0.30.1 keeps the selected topology associative, but its joint
+    origin pick coordinates themselves are numeric. Joint offset/value
+    expressions remain symbolic.
+    """
+    if not isinstance(reference, dict):
+        return reference
+    result = dict(reference)
+    for key in ("point", "face", "circle", "edge", "on", "corner"):
+        value = result.get(key)
+        if isinstance(value, (list, tuple)):
+            result[key] = [pv(item) for item in value]
+    return result
+
+
 def _component_slug(name):
     text = re.sub(r"[^A-Za-z0-9_]+", "_", name).strip("_")
     if not text:
@@ -226,7 +243,13 @@ def compile_assembly(value, name):
         first_is_root = (
             instances[0] is assembly.instances[0] and parent_name is None
         )
-        create_params = {"name": component_name, "grounded": first_is_root}
+        first_has_symbolic_move = bool(
+            parameters_in(*instances[0].translation)
+        )
+        create_params = {
+            "name": component_name,
+            "grounded": first_is_root and not first_has_symbolic_move,
+        }
         if parent_name is not None:
             create_params["parent"] = parent_name
         commands.append(_command("component.create", **create_params))
@@ -283,14 +306,25 @@ def compile_assembly(value, name):
                     },
                 ))
 
-        # Each occurrence now starts at identity. SolidCraft itself applies
-        # the requested translation and axis-angle rotation directly.
-        # In 0.30.1 the supported keys are translate/axis/angle, not 'to'.
-        # occurrence.move accepts native length expressions, so preserve
-        # Parameter/Expression translations instead of flattening them.
+        # SolidCraft 0.30.1 accepts only numeric occurrence.move
+        # translations. Keep ordinary numeric moves native. A symbolic move is
+        # lowered to a fully constrained planar placement against the parent
+        # component's XY datum: values carry X/Y and offset carries Z. These
+        # joint expressions remain associative when a design parameter changes.
+        #
+        # Rotation is still an ordinary numeric occurrence.move first. The
+        # inline child frame is authored afterwards in world orientation, so
+        # the placement joint changes position without undoing that rotation.
         for instance, native_name in occurrences:
+            symbolic_move = bool(parameters_in(*instance.translation))
             if instance.rotation is None and not any(instance.translation):
                 continue
+            if symbolic_move and instance.attachment is not None:
+                raise ModelError(
+                    "symbolic move() on an attached occurrence is not "
+                    "supported by the SolidCraft 0.30.1 compatibility lowering"
+                )
+
             for parameter in parameters_in(*instance.translation):
                 if not any(
                     command["command"] == "parameters.add"
@@ -302,19 +336,52 @@ def compile_assembly(value, name):
                         name=parameter.name,
                         expression=f"{parameter.value:g} mm",
                     ))
-            params = {
-                "occurrence": native_name,
-                "translate": [
-                    command_value(value)
-                    for value in instance.translation
-                ],
-            }
-            if instance.rotation is not None:
-                axis, degrees = instance.rotation
-                params.update(axis=list(axis), angle=f"{degrees:g} deg")
-            if instance is assembly.instances[0] and parent_name is None:
-                params["move_grounded"] = True
-            commands.append(_command("occurrence.move", **params))
+
+            if instance.rotation is not None or not symbolic_move:
+                params = {
+                    "occurrence": native_name,
+                    "translate": (
+                        [0.0, 0.0, 0.0]
+                        if symbolic_move
+                        else [pv(value) for value in instance.translation]
+                    ),
+                }
+                if instance.rotation is not None:
+                    axis, degrees = instance.rotation
+                    params.update(axis=list(axis), angle=f"{degrees:g} deg")
+                if (
+                    instance is assembly.instances[0]
+                    and parent_name is None
+                    and not symbolic_move
+                ):
+                    params["move_grounded"] = True
+                commands.append(_command("occurrence.move", **params))
+
+            if symbolic_move:
+                x, y, z = instance.translation
+                parent_origin = {"plane": "XY"}
+                if parent_name is not None:
+                    parent_origin["occurrence"] = f"{parent_name}:1"
+                commands.append(_command(
+                    "joint.create",
+                    type="planar",
+                    name=f"Place {native_name}",
+                    a=parent_origin,
+                    b={
+                        "occurrence": native_name,
+                        "point": [0.0, 0.0, 0.0],
+                        "z": [0.0, 0.0, 1.0],
+                        "x": [1.0, 0.0, 0.0],
+                    },
+                    values=[
+                        command_value(x),
+                        command_value(y),
+                        0.0,
+                    ],
+                    offset=command_value(z),
+                    flip=True,
+                    angle=0.0,
+                ))
 
     for instance in assembly.instances:
         attachment = instance.attachment
@@ -446,6 +513,9 @@ def compile_assembly(value, name):
             any(pv(value) != 0 for value in attachment.offset)
             or bool(parameters_in(*attachment.offset))
         )
+        parent_origin = _concrete_joint_reference(parent_origin)
+        child_origin = _concrete_joint_reference(child_origin)
+
         params = {
             "type": "planar" if has_planar_offset else "rigid",
             "name": f"Attach {child_occurrence} to {parent_occurrence}",
