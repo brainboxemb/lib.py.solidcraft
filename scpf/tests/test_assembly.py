@@ -133,6 +133,30 @@ class AssemblyTests(unittest.TestCase):
         self.assertEqual(len(copies), 1)
         self.assertEqual(copies[0]["params"]["component"], "Panel")
 
+    def test_each_named_group_is_grounded_as_a_fixed_parent_frame(self):
+        from scpf import Box, component
+        from scpf.assembly import compile_assembly
+
+        @component
+        class Part:
+            def build(self):
+                return Box(10, 10, 10)
+
+        left = Part().group("LeftGroup")
+        right = Part().copy().group("RightGroup")
+        commands = compile_assembly(left + right, "Grouped")["commands"]
+
+        groups = [
+            command["params"]
+            for command in commands
+            if command["command"] == "component.create"
+            and command["params"]["name"] in {"LeftGroup", "RightGroup"}
+        ]
+        self.assertEqual(
+            [(group["name"], group["grounded"]) for group in groups],
+            [("LeftGroup", True), ("RightGroup", True)],
+        )
+
     def test_group_name_conflicts_and_multi_parent_definitions_rejected(self):
         from scpf.core import Box
         from scpf.model_objects import ModelDefinition, ModelInstance

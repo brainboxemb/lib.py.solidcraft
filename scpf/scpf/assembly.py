@@ -168,6 +168,9 @@ def compile_assembly(value, name):
 
     # Named groups are actual empty native components, not just labels in
     # Python. Child component definitions are created under their parent.
+    # A group is a fixed local/browser container: placement belongs to its
+    # children, not to the group itself. Ground every group so independent
+    # grouped subassemblies keep the root coordinate frame in the native solver.
     # Native "component.create(parent=...)" makes the browser expandable.
     group_names = list(dict.fromkeys(
         instance.group_name
@@ -181,7 +184,7 @@ def compile_assembly(value, name):
             "component.create",
             name=group_name,
             activate=False,
-            grounded=(assembly.instances[0].group_name == group_name),
+            grounded=True,
         ))
 
     by_definition = {}
