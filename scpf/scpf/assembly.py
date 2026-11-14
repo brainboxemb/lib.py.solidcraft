@@ -358,9 +358,18 @@ def compile_assembly(value, name):
 
             if symbolic_placement:
                 x, y, z = instance.translation
-                parent_origin = {"plane": "XY"}
-                if parent_name is not None:
-                    parent_origin["occurrence"] = f"{parent_name}:1"
+                parent_origin = {
+                    "occurrence": (
+                        f"{parent_name}:1"
+                        if parent_name is not None
+                        else "root"
+                    ),
+                    "frame": {
+                        "origin": [0.0, 0.0, 0.0],
+                        "z": [0.0, 0.0, 1.0],
+                        "x": [1.0, 0.0, 0.0],
+                    },
+                }
                 commands.append(_command(
                     "joint.create",
                     type="planar",

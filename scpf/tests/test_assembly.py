@@ -837,7 +837,17 @@ class AssemblyTests(unittest.TestCase):
             and command["params"]["name"] == "Place Panel:1"
         )
         self.assertEqual(placement["type"], "planar")
-        self.assertEqual(placement["a"], {"plane": "XY"})
+        self.assertEqual(
+            placement["a"],
+            {
+                "occurrence": "root",
+                "frame": {
+                    "origin": [0.0, 0.0, 0.0],
+                    "z": [0.0, 0.0, 1.0],
+                    "x": [1.0, 0.0, 0.0],
+                },
+            },
+        )
         self.assertEqual(placement["values"], [0, "depth / 2", 0.0])
         self.assertEqual(placement["offset"], 0)
         self.assertTrue(placement["flip"])
