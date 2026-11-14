@@ -47,9 +47,9 @@
       "params": {
         "occurrence": "Panel:2",
         "translate": [
-          11,
-          0,
-          0
+          11.0,
+          0.0,
+          0.0
         ]
       }
     },
@@ -85,9 +85,9 @@
       "params": {
         "occurrence": "Frame:1",
         "translate": [
-          0,
-          20,
-          0
+          0.0,
+          20.0,
+          0.0
         ]
       }
     }

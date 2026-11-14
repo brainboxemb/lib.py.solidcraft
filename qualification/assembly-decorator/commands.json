@@ -38,9 +38,9 @@
       "params": {
         "occurrence": "Post:1",
         "translate": [
-          -15,
-          0,
-          0
+          -15.0,
+          0.0,
+          0.0
         ],
         "move_grounded": true
       }
@@ -50,9 +50,9 @@
       "params": {
         "occurrence": "Post:2",
         "translate": [
-          15,
-          0,
-          0
+          15.0,
+          0.0,
+          0.0
         ]
       }
     }

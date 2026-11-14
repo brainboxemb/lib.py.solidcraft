@@ -75,9 +75,9 @@
       "params": {
         "occurrence": "Companion:1",
         "translate": [
-          70,
-          0,
-          0
+          70.0,
+          0.0,
+          0.0
         ]
       }
     },

@@ -75,9 +75,9 @@
       "params": {
         "occurrence": "DerivedChild:1",
         "translate": [
-          0,
-          0,
-          20
+          0.0,
+          0.0,
+          20.0
         ]
       }
     }

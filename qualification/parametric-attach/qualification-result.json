@@ -2,7 +2,7 @@
   "schema_version": 1,
   "case": "parametric-attach",
   "title": "Editable distance between attached components",
-  "source_commit": "77050f5602feb8bfc39b4b04cb256b42bbdb06e6",
+  "source_commit": "e57f2dc3211cdca893b4608a2109fa24cf3aec84",
   "solidcraft_version": "0.30.1",
   "status": "pass",
   "levels": {

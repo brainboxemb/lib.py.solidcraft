@@ -59,9 +59,9 @@
       "params": {
         "occurrence": "Marker:1",
         "translate": [
-          50,
-          20,
-          15
+          50.0,
+          20.0,
+          15.0
         ],
         "axis": [
           0.0,

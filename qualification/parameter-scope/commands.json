@@ -75,9 +75,9 @@
       "params": {
         "occurrence": "Panel 2:1",
         "translate": [
-          100,
-          0,
-          0
+          100.0,
+          0.0,
+          0.0
         ]
       }
     },
@@ -127,9 +127,9 @@
       "params": {
         "occurrence": "Panel 3:1",
         "translate": [
-          220,
-          0,
-          0
+          220.0,
+          0.0,
+          0.0
         ]
       }
     },
@@ -138,9 +138,9 @@
       "params": {
         "occurrence": "Panel 3:2",
         "translate": [
-          340,
-          0,
-          0
+          340.0,
+          0.0,
+          0.0
         ]
       }
     },
@@ -176,9 +176,9 @@
       "params": {
         "occurrence": "Panel 4:1",
         "translate": [
-          460,
-          0,
-          0
+          460.0,
+          0.0,
+          0.0
         ]
       }
     }
