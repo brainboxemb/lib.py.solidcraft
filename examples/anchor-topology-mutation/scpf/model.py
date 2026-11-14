@@ -31,7 +31,7 @@ class Marker:
         # Keep the marker on one side of its attachment origin. Native
         # SolidCraft mating then places it fully outside the selected front
         # face, touching the parent exactly at the topology corner.
-        return Box(self.SIZE, self.SIZE, self.SIZE).move(z=-self.SIZE / 2)
+        return Box(self.SIZE, self.SIZE, self.SIZE).move(z=-half(self.SIZE))
 
 
 class AnchorTopologyMutation:

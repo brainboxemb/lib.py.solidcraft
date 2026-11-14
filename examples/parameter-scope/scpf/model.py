@@ -21,7 +21,7 @@ class ParameterScope:
         shared_b = Panel(width=self.shared_width, name="shared_b").move(x=340)
 
         derived = Panel(
-            width=self.shared_width / 2,
+            width=half(self.shared_width),
             name="derived",
         ).move(x=460)
 

@@ -4,14 +4,14 @@ class Board:
     depth = 12.0
 
     def build(self):
-        half = self.width / 2
+        half_width = half(self.width)
         with Sketch(name="Profile", plane="XZ") as sketch:
             Polygon2D(
                 [
-                    ("lower_left", (-half, 0)),
-                    ("lower_right", (half, 0)),
-                    ("upper_right", (half, self.height)),
-                    ("upper_left", (-half, self.height)),
+                    ("lower_left", (-half_width, 0)),
+                    ("lower_right", (half_width, 0)),
+                    ("upper_right", (half_width, self.height)),
+                    ("upper_left", (-half_width, self.height)),
                 ],
                 plane="XZ",
                 world=True,

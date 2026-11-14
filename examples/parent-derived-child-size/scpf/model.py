@@ -30,8 +30,8 @@ class ParentDerivedChildSize:
             name="parent",
         )
         child = DerivedChild(
-            width=self.base_width / 2,
-            depth=self.base_depth / 2,
+            width=half(self.base_width),
+            depth=half(self.base_depth),
             name="child",
         ).move(z=20)
 
